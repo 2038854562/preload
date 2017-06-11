@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>图片预加载之无序加载qq-imgLoad</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        background-color: #eee;
+    }
+    
+    .warp {
+        margin: 300px 0 0 200px;
+    }
+    
+    .panel {
+        width: 350px;
+        padding: 2px;
+        border: 1px solid #e4e4e4;
+        background-color: #fff;
+        display: none;
+    }
+    
+    ul li {
+        list-style: none;
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-bottom: 5px;
+        border: 1px solid #fff;
+    }
+    
+    ul li:hover {
+        border: 1px solid #e4e4e4;
+    }
+    
+    #face-btn {
+        display: block;
+        text-decoration: none;
+        color: red;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="warp">
+        <a href="javascript:;" id="face-btn">表情</a>
+        <div class="panel">
+            <p class="loading">
+                表情加载中，请稍后。。。
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript" src="jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="js/preloadFun.js"></script>
+    <script>
+    var $btn = $("#face-btn"),
+        $panel = $(".panel"),
+        imgs = []
+        
+        // 创建数组
+    for (var i = 0; i < 22; i++) {
+        imgs.push('faceImg/QQ/' + (i + 1) + '.gif')
+    }
+    var len = imgs.length;
+    // 点击事件
+    $btn.on("click", function(e) {
+    	e.stopPropagation();
+        $panel.show();
+
+        // 调用无序加载插件
+        $.preload(imgs, {
+            all: function() {
+                var html = '';
+                html += "<ul class='list'>";
+                for (var i = 0; i < len; i++) {
+                    html += "<li><img src='"+imgs[i]+"'></li>"
+                }
+                html+='</ul>';
+
+                setTimeout(function(){//为了演示效果
+                	$panel.html(html)
+                },500)
+            }
+        })
+
+        //点击其他区域表情消失
+        $(document).on("click",function(){
+        	$panel.on("click",function(){
+        		return false;
+        	})
+        	$panel.hide();
+
+        })
+    })
+    </script>
+</body>
+
+</html>
